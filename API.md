@@ -5,9 +5,9 @@ All data returned by this API come in a json object. The routes arew as defined 
 The base url for development purposes is: 
 
 ```
-http://localhost:1337
+https://decider-backend.herokuapp.com/
 ```
-add the above string before every endpoint listred below:
+add the above string before every endpoint listed below:
 
 
 ## GET  /restaurants/<category>/<location>
