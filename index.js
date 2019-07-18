@@ -12,6 +12,12 @@ const api = new ParseServer({
     serverURL: 'http://decider-fbu.herokuapp.com/parse' // Don't forget to change to https if needed
   });
 
+const yelpRoutes = {
+    businessUrl:  "https://api.yelp.com/v3/businesses/search",
+    clientID: "Z1M9PVNRNrHm-KIFnA2eHw",
+    apiKey: "lyUcXUepfXrwaCC3nygsdSF5_5HfaAEVSA3NJwdMF5caoMJrJ4qngfAJLKovawiCcHxNjNQY9mBEFUuRVzCoueutimkoG9JEZIt1V0p9rcWcxpfAeKUd8IeUarQvXXYx",
+}
+
 const corsConfig = {
     origin: true,
     credentials: true,
@@ -34,40 +40,41 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.get('/', (req, res) => res.send('Hello World!'))
 
 app.get('/restaurants/:category/:location', (req, res) => {
-    try{
+       
+        const {category, location} = req.params || {}
+        
+        const request = require('request')
 
-        const {location, category} = req.params || {}
-        return res.json(
-            {
-                "results": [
-                    {
-                        
-                        "id": "WavvLdfdP6g8aZTtbBQHTw",
-                        "alias": "gary-danko-san-francisco",
-                        "name": "Gary Danko",
-                        "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg"
-                    },
-                    {
-                        "id": "23dLdfdP6g8aZTtbBQHTz",
-                        "alias": "maria-pancakes-san-francisco",
-                        "name": "Pancake house",
-                        "image_url": "https://www.wonderparenting.com/wp-content/uploads/2019/04/cinnamon-banana-pancakes-wonderparenting.jpeg"
-                    },
-                
-                    {
-                        "id": "ZenvLfddP6g5aXItbBQDHq",
-                        "alias": "kate-tasties-sunnyvale",
-                        "name": "kate tasties",
-                        "image_url": "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                    }
-                    ]
+        const options = {
+            url: yelpRoutes.businessUrl,
+            headers: {
+                'Authorization': 'Bearer lyUcXUepfXrwaCC3nygsdSF5_5HfaAEVSA3NJwdMF5caoMJrJ4qngfAJLKovawiCcHxNjNQY9mBEFUuRVzCoueutimkoG9JEZIt1V0p9rcWcxpfAeKUd8IeUarQvXXYx'
+            },
+            qs: {
+                categories: category,
+                location
             }
-            
-        )
+        
+        }
 
-    } catch(error) {
-        throw new Error(error)
-    }
+    request(options, (error, response, body) => {
+        try {
+            if (!error && response.statusCode == 200) {
+                const results = JSON.parse(body);
+                return res.json(results)
+
+            } else if(error) {
+                console.log(error);
+            } else {
+                console.log(response);
+            }
+                
+
+        } catch(error) {
+            throw new Error(error)
+        }
+    })
+
 })
 
 app.listen(port, () => console.log(`Server running on port ${port}!`))
