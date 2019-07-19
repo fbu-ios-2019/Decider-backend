@@ -10,33 +10,37 @@ https://decider-backend.herokuapp.com/
 add the above string before every endpoint listed below:
 
 
-## GET  /restaurants/<category>/<location>
-Replace the restaurant type (cuisine available with the type you want eg. Mexican, Thai etc)
+## GET  /photos/:category/:location/:offset/:count
+- Replace the category with the category you want. for now only the "all" category works. 
+- Replace the location with a string of your location which can be in anty format
+- Replace offset with a number representing how many objects to skip in the database
+- Replace count with the number of objects you want.
 
-Response: Array of 5 restaurants and their details. eg. 
+Response: Array of at most :count objects and their details. eg. 
 ```
-{
-    "results": [
+[
     {
-        
-        "id": "WavvLdfdP6g8aZTtbBQHTw",
-        "alias": "gary-danko-san-francisco",
-        "name": "Gary Danko",
-        "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg"
+        "categories": [
+            "Mexican",
+            "Bars"
+        ],
+        "imageUrl": "https://s3-media2.fl.yelpcdn.com/bphoto/GCO2mrI8FCt0AzBWYAlhhQ/o.jpg",
+        "restaurantYelpId": "p-nAA9LHJc9KRH27FNe2Kw",
+        "createdAt": "2019-07-19T17:23:05.348Z",
+        "updatedAt": "2019-07-19T17:23:05.348Z",
+        "objectId": "FYGkdGKmCL"
     },
     {
-        "id": "23dLdfdP6g8aZTtbBQHTz",
-        "alias": "maria-pancakes-san-francisco",
-        "name": "Pancake house",
-        "image_url": "https://www.wonderparenting.com/wp-content/uploads/2019/04/cinnamon-banana-pancakes-wonderparenting.jpeg"
-    },
-
-    {
-        "id": "ZenvLfddP6g5aXItbBQDHq",
-        "alias": "kate-tasties-sunnyvale",
-        "name": "kate tasties",
-        "image_url": "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+        "categories": [
+            "Mexican",
+            "Bars"
+        ],
+        "imageUrl": "https://s3-media2.fl.yelpcdn.com/bphoto/FyUPb_tsyC2FDi6pxJ1quw/o.jpg",
+        "restaurantYelpId": "p-nAA9LHJc9KRH27FNe2Kw",
+        "createdAt": "2019-07-19T17:23:05.351Z",
+        "updatedAt": "2019-07-19T17:23:05.351Z",
+        "objectId": "5CEEs0dprk"
     }
-    ]
-}
+    .....
+]
 ```
