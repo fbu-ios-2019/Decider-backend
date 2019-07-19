@@ -107,3 +107,23 @@ Response: Returns an object that looks like the following.
 }
 
 ```
+## GET /cities
+- takes no input
+
+- returns a list of cities whose resrtaurants are in our database. Looks like the following:
+
+```
+{
+    "results": [
+        "Sunnyvale",
+        "Palo Alto",
+        "San Jose",
+        "Shaver Lake",
+        "Oakhurst",
+        "Bass Lake",
+        "Mammoth Lakes",
+        "Menlo Park",
+        "Stanford"
+    ]
+}
+```
