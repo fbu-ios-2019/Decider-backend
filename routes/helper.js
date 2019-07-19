@@ -14,14 +14,15 @@ router.get('/categories', (req, res) => {
         query.find().then(results => {
             let data = JSON.stringify(results)
             data = JSON.parse(data)
-            let categoryList = []
+            let categorySet= new Set()
             for (item of data) {
                 for (field of item.category) {
-                    categoryList.push(field)
+                    categorySet.add(field)
                 }
             }
+
             res.json({
-                results: categoryList
+                results: [... categorySet]
             })
         })
     }

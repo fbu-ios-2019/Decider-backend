@@ -51,17 +51,12 @@ Response: Returns an object that looks like the following.
 {
     "results": [
         "Food Trucks",
-        "Mexican",
         "Diners",
         "Ice Cream & Frozen Yogurt",
         "Breakfast & Brunch",
-        "Coffee & Tea",
-        "Breakfast & Brunch",
         "Asian Fusion",
         "Italian",
-        "Breakfast & Brunch",
         "Coffee & Tea",
-        "Mexican",
         "Bars",
         "Mexican",
         "Seafood",
