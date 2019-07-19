@@ -7,6 +7,7 @@ const port = process.env.PORT || 1337
 
 const photosRouter = require('./routes/photos')
 const helperRouter = require('./routes/helper')
+const restaurantsRouter = require('./routes/restaurants')
 const {parseConfig, corsConfig, yelpRoutes} = require('./config')
 
 Parse.initialize(parseConfig.appId, "", parseConfig.masterKey)
@@ -21,6 +22,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(photosRouter)
 app.use(helperRouter)
+app.use(restaurantsRouter)
 
 app.get('/', (req, res) => {
     
