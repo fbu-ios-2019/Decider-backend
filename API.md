@@ -64,3 +64,46 @@ Response: Returns an object that looks like the following.
 }
 
 ```
+
+## GET /restaurant/:id
+- Input the id of the restaurant you want details for
+
+Response: Returns an object that looks like the following.
+```
+{
+    "hours": [
+        {
+            ...
+        }
+    ],
+    "category": [
+        "Cajun/Creole",
+        "American (New)",
+        "Lounges"
+    ],
+    "coordinates": {
+        "latitude": 37.4450225830078,
+        "longitude": -122.161323547363
+    },
+    "name": "NOLA Restaurant & Bar",
+    "rating": 3.5,
+    "priceRating": 2,
+    "likeCount": 0,
+    "unlikeCount": 0,
+    "phone": "+16503282722",
+    "yelpId": "jwaXc3VVGDFQu1aCoiXwdw",
+    "address": "535 Ramona St",
+    "city": "Palo Alto",
+    "state": "CA",
+    "zipcode": "94301",
+    "country": "US",
+    "coverUrl": "https://s3-media2.fl.yelpcdn.com/bphoto/tna5SSdgZq3fFxoi4-Xx7A/o.jpg",
+    "linkUrl": "https://www.yelp.com/biz/nola-restaurant-and-bar-palo-alto?adjust_creative=3L8Y7mtIpK7UAyR0uorDHA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=3L8Y7mtIpK7UAyR0uorDHA",
+    "reviewCount": 2730,
+    "createdAt": "2019-07-19T17:27:23.938Z",
+    "updatedAt": "2019-07-19T17:27:23.938Z",
+    "objectId": "ThpAl2946B"
+
+}
+
+```
