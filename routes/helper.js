@@ -32,4 +32,22 @@ router.get('/categories', (req, res) => {
     
 })
 
+router.get('/cities', (req, res) => {
+    const Restaurants = Parse.Object.extend("Restaurants")
+    const query = new Parse.Query(Restaurants)
+    query.select("city")
+    query.find().then(results => {
+        let data = JSON.stringify(results)
+        data = JSON.parse(data)
+        let citySet = new Set()
+        for (item of data) {
+            citySet.add(item.city)
+        }
+        res.json({
+            results: [... citySet]
+        })
+        
+    })
+})
+
 module.exports = router
