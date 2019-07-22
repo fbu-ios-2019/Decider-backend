@@ -127,3 +127,119 @@ Response: Returns an object that looks like the following.
     ]
 }
 ```
+## POST /register
+
+- takes in username, email, password and confirmation as part of request body
+- if query is successful you get back:
+
+```
+{
+    "success": "user was registered successfully",
+    "user": {
+        "username": "ale",
+        "email": "ale@abc.com",
+        "createdAt": "2019-07-22T23:43:07.332Z",
+        "sessionToken": "r:f9da29ae45f91aa3d8ed5cfc3346dee5",
+        "updatedAt": "2019-07-22T23:43:07.332Z",
+        "objectId": "LVmja20BmX"
+    }
+}
+
+```
+
+If query is unsuccesful you get the following return
+
+```
+{
+    "error": "error description here"
+}
+
+```
+
+## POST /login
+
+- takes in username and password as part of request body
+- if query is successful you get back:
+
+```
+{
+    "success": "succesfully logged in",
+    "user": {
+        "username": "ale",
+        "email": "ale@abc.com",
+        "createdAt": "2019-07-22T23:43:07.332Z",
+        "updatedAt": "2019-07-22T23:43:07.332Z",
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "LVmja20BmX": {
+                "read": true,
+                "write": true
+            }
+        },
+        "sessionToken": "r:6d047ead37eb10e91d6740d3ec7b76c7",
+        "objectId": "LVmja20BmX"
+    }
+
+```
+
+If query is unsuccesful you get the following return
+
+```
+{
+    "error": "error description here"
+}
+
+```
+
+## GET /currentUser
+
+- takes in no parameter or body
+- if query is successful you get back:
+
+```
+{
+    "user": {
+        "username": "ale",
+        "email": "ale@abc.com",
+        "createdAt": "2019-07-22T23:43:07.332Z",
+        "updatedAt": "2019-07-22T23:43:07.332Z",
+        "ACL": {
+            "*": {
+                "read": true
+            },
+            "LVmja20BmX": {
+                "read": true,
+                "write": true
+            }
+        },
+        "sessionToken": "r:6d047ead37eb10e91d6740d3ec7b76c7",
+        "objectId": "LVmja20BmX"
+    }
+}
+
+```
+
+## POST /logout
+
+- takes in no parameters
+
+- on success:
+```
+{
+    "success": "logout was successful"
+}
+
+```
+
+on failure:
+
+```
+{
+    "error": "error description here"
+}
+
+```
+
+
