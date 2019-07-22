@@ -65,7 +65,7 @@ Response: Returns an object that looks like the following.
 
 ```
 
-## GET /restaurant/:id
+## GET /restaurants/:id
 - Input the id of the restaurant you want details for
 
 Response: Returns an object that looks like the following.
