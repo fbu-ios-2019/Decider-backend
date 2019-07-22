@@ -13,12 +13,13 @@ router.get('/photos/:category/:location/:offset/:count', (req, res) => {
         const query = new Parse.Query(Photos)
         query.skip(parseInt(offset, 10))
         query.limit(parseInt(count, 10)) 
-        if (category === 'all') {
-            let dbPhotos = await query.find()
-            dbPhotos = JSON.stringify(dbPhotos)
-            dbPhotos = JSON.parse(dbPhotos)
-            res.json(dbPhotos)
+        if (category !== 'all') {
+            query.equalTo("categories", category)
         }
+        let dbPhotos = await query.find()
+        dbPhotos = JSON.stringify(dbPhotos)
+        dbPhotos = JSON.parse(dbPhotos)
+        res.json(dbPhotos)
 
     }
     fetchPhotos()

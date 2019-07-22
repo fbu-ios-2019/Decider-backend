@@ -6,6 +6,7 @@ Parse.initialize(parseConfig.appId, "", parseConfig.masterKey)
 Parse.serverURL = parseConfig.serverURL
 
 router.get('/restaurants/:id', (req, res) => {
+    console.log("got here")
     const {id} = req.params || {}
     async function fetchRestaurant() {
         const Restaurants = Parse.Object.extend("Restaurants")
