@@ -102,7 +102,12 @@ Response: Returns an object that looks like the following.
     "reviewCount": 2730,
     "createdAt": "2019-07-19T17:27:23.938Z",
     "updatedAt": "2019-07-19T17:27:23.938Z",
-    "objectId": "ThpAl2946B"
+    "objectId": "ThpAl2946B",
+    "images": [
+        "https://s3-media2.fl.yelpcdn.com/bphoto/tna5SSdgZq3fFxoi4-Xx7A/o.jpg",
+        "https://s3-media2.fl.yelpcdn.com/bphoto/pM_vZ2M2pPFhGiMgIDoi8g/o.jpg",
+        "https://s3-media1.fl.yelpcdn.com/bphoto/0GjPaWleSr1VjjtYYLzM5Q/o.jpg"
+    ]
 
 }
 
