@@ -120,15 +120,15 @@ Response: Returns an object that looks like the following.
 ```
 {
     "results": [
-        "Sunnyvale",
-        "Palo Alto",
-        "San Jose",
-        "Shaver Lake",
-        "Oakhurst",
-        "Bass Lake",
-        "Mammoth Lakes",
-        "Menlo Park",
-        "Stanford"
+        "Sunnyvale, CA",
+        "Palo Alto, CA",
+        "San Jose, CA",
+        "Shaver Lake, CA",
+        "Oakhurst, CA",
+        "Bass Lake, CA",
+        "Mammoth Lakes, CA",
+        "Menlo Park, CA",
+        "Stanford, CA"
     ]
 }
 ```
