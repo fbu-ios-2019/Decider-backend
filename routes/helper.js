@@ -22,7 +22,7 @@ router.get('/categories', (req, res) => {
             }
 
             res.json({
-                results: [... categorySet]
+                results: ["all", ... categorySet]
             })
         })
     }
