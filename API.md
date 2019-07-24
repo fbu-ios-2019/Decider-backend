@@ -10,15 +10,15 @@ https://decider-backend.herokuapp.com/
 add the above string before every endpoint listed below:
 
 
-## GET  /photos/:category/:location/:offset/:count
+## GET  /photos/:category/:location/:offset/
 - Replace the category with the category you want. for now only the "all" category works. 
 - Replace the location with a string of your location which can be in anty format
 - Replace offset with a number representing how many objects to skip in the database
-- Replace count with the number of objects you want.
 
 Response: Array of at most :count objects and their details. eg. 
 ```
-[
+{
+    results: [
     {
         "categories": [
             "Mexican",
@@ -42,7 +42,11 @@ Response: Array of at most :count objects and their details. eg.
         "objectId": "5CEEs0dprk"
     }
     .....
-]
+],
+offset: 40,
+count: 20
+}
+
 ```
 ## GET /categories
 
