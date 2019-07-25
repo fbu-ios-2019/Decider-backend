@@ -70,9 +70,9 @@ Response: Returns an object that looks like the following.
 ```
 
 ## GET /restaurants/recommendations
-- Takes no input
+- Takes location(string), likedPhotos(array), hatedPhotos(array) from the request body.
 - Response: 3 top restaurants recommended for the user.
-- Currently returning 3 hard coded restaurants
+- Returns 3 top restaurants based on userSwipes and other restaurant parameters.
 
 ```
 {
