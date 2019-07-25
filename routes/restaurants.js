@@ -54,7 +54,6 @@ router.get('/restaurants/recommendations', (req, res) => {
         }
         results.sort((a, b) => {return b["score"] - a["score"]});
         res.json({results:results.slice(0, 3)})
-        //console.log(results)
     })
 })  
 
