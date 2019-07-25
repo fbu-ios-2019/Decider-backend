@@ -55,7 +55,26 @@ router.get('/restaurants/recommendations', (req, res) => {
         results.sort((a, b) => {return b["score"] - a["score"]});
         res.json({results:results.slice(0, 3)})
     })
-})  
+}) 
+
+router.post('/restaurants/save', (req, res) => {
+    const {yelpId} = req.body || ""
+    const {username} = req.body || ""
+
+    const User = Parse.Object.extend("User")
+    const userQuery = new Parse.Query(User)
+    userQuery.equalTo("username", username)
+    userQuery.first().then(userObject => {
+        userObject.addUnique("savedRestaurants", yelpId)
+        userObject.save().then(() => {
+        res.json({
+            success: "successfully saved restaurant"
+        })
+    })
+    })
+    
+    
+})
 
 router.get('/restaurants/:id', (req, res) => {
     const {id} = req.params || {}
@@ -91,6 +110,7 @@ router.get('/restaurants/:id', (req, res) => {
   
     
 })
+
 
 function weightedScore(data, mostReviews) {
     const {photosLikedCount, photosHatedCount, restaurantLikes, restaurantDislikes, rating, reviewCount} = data

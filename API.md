@@ -184,6 +184,16 @@ Response: Returns an object that looks like the following.
 }
 ```
 
+## POST /restaurants/save
+- Takes in the user's username (string) and restaurants yelpId(string) then saves the restaurant in the user's savedRestaurants column.
+ 
+On success returns: 
+```
+{
+    "success": "successfully saved restaurant"
+}
+```
+
 ## GET /restaurants/:id
 - Input the id of the restaurant you want details for
 
