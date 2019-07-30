@@ -98,7 +98,11 @@ router.post('/restaurants/list', (req,res) => {
             photoQuery.find().then(photos => {
                 photos = JSON.stringify(photos)
                 photos = JSON.parse(photos)
-                result["images"] = photos
+                let pictures = []
+                for (photo of photos) {
+                    pictures.push(photo.imageUrl)
+                }
+                result["images"] = pictures
                 if (i === results.length - 1) {
                     res.json({results})
                 }

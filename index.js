@@ -73,7 +73,7 @@ app.get('/crawl/:category/:location', (req, res) => {
         qs: {
             categories: category,
             location,
-            term: "restaurants"
+            // term: "restaurants"
         }
     
     }
