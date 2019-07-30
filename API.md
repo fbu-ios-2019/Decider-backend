@@ -194,6 +194,86 @@ On success returns:
 }
 ```
 
+## POST /restaurants/list
+- Takes in ids (array of restaurant ids) as input
+- Returns a detailed list of restaurants whose ids appear in the list 
+
+```
+{
+    results =     [
+                {
+            address = "36088 Tollhouse Rd";
+            category =             (
+                Grocery,
+                Bakeries,
+                "Beer, Wine & Spirits"
+            );
+            city = "Shaver Lake";
+            coordinates =             {
+                latitude = "37.0667809";
+                longitude = "-119.3571531";
+            };
+            country = US;
+            coverUrl = "https://s3-media1.fl.yelpcdn.com/bphoto/H_Xap36LZ0KYZbbA096GBg/o.jpg";
+            createdAt = "2019-07-19T17:26:03.859Z";
+            hours = {},
+            images = [
+                    {
+                    categories =                     (
+                        Mexican,
+                        Seafood,
+                        Salad
+                    );
+                    createdAt = "2019-07-30T06:15:47.227Z";
+                    imageUrl = "https://s3-media3.fl.yelpcdn.com/bphoto/Va4TNo2U1MAD3yNKfang-A/o.jpg";
+                    objectId = uVqyZx3850;
+                    restaurantYelpId = "HWpAVc-weWhomY7O---dXQ";
+                    updatedAt = "2019-07-30T06:15:47.227Z";
+                },
+                    {
+                    categories =                     (
+                        Mexican,
+                        Seafood,
+                        Salad
+                    );
+                    createdAt = "2019-07-30T06:15:47.224Z";
+                    imageUrl = "https://s3-media1.fl.yelpcdn.com/bphoto/ACkoFr8v-URyf048lEubkg/o.jpg";
+                    objectId = 9ZFO2GDHsF;
+                    restaurantYelpId = "HWpAVc-weWhomY7O---dXQ";
+                    updatedAt = "2019-07-30T06:15:47.224Z";
+                },
+                    {
+                    categories =                     (
+                        Mexican,
+                        Seafood,
+                        Salad
+                    );
+                    createdAt = "2019-07-30T06:15:47.228Z";
+                    imageUrl = "https://s3-media1.fl.yelpcdn.com/bphoto/PJNMqrJY9TS6mq6w-BsMdA/o.jpg";
+                    objectId = LZI9KYK3mY;
+                    restaurantYelpId = "HWpAVc-weWhomY7O---dXQ";
+                    updatedAt = "2019-07-30T06:15:47.228Z";
+                }
+            );
+            likeCount = 0;
+            linkUrl = "https://www.yelp.com/biz/rubios-coastal-grill-sacramento-2?adjust_creative=3L8Y7mtIpK7UAyR0uorDHA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=3L8Y7mtIpK7UAyR0uorDHA";
+            name = "Rubio's Coastal Grill";
+            objectId = 9yRpcvSGWJ;
+            phone = "+19164836643";
+            priceRating = 1;
+            rating = "3.5";
+            reviewCount = 144;
+            state = CA;
+            unlikeCount = 0;
+            updatedAt = "2019-07-30T06:15:47.198Z";
+            yelpId = "HWpAVc-weWhomY7O---dXQ";
+            zipcode = 95821;
+        }
+    ]
+}
+
+```
+
 ## GET /restaurants/:id
 - Input the id of the restaurant you want details for
 

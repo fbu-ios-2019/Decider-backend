@@ -5,10 +5,11 @@ const {parseConfig, recommendationsSample, likedSample, hatedSample, MAX_RATING}
 Parse.initialize(parseConfig.appId, "", parseConfig.masterKey)
 Parse.serverURL = parseConfig.serverURL
 
-router.get('/restaurants/recommendations', (req, res) => {
+router.post('/restaurants/recommendations', (req, res) => {
     const location = req.body.location ? req.body.location: "Sunnyvale"
-    const likedPhotos = req.body.likedPhotos ? req.body.likedPhotos : likedSample
-    const hatedPhotos = req.body.hatedPhotos ? req.body.hatedPhotos : hatedSample
+    let likedPhotos = req.body.likedPhotos ? req.body.likedPhotos : likedSample
+    let hatedPhotos = req.body.hatedPhotos ? req.body.hatedPhotos : hatedSample
+
     let inputDict = {}
     
     for (photo of likedPhotos) {
@@ -17,6 +18,7 @@ router.get('/restaurants/recommendations', (req, res) => {
                 liked: 0,
                 hated: 0
             }
+            
         }
         inputDict[photo.restaurantYelpId]["liked"] = (inputDict[photo.restaurantYelpId]["liked"] || 0) + 1
     }
@@ -74,6 +76,35 @@ router.post('/restaurants/save', (req, res) => {
     })
     
     
+})
+
+router.post('/restaurants/list', (req,res) => {
+    let {ids} = req.body || {}
+    ids = JSON.parse(ids)
+    
+    const Restaurants = Parse.Object.extend("Restaurants")
+    const query = new Parse.Query(Restaurants)
+    query.containedIn("yelpId", ids)
+    query.find().then(results => {
+        results = JSON.stringify(results)
+        results = JSON.parse(results)
+
+        
+        for (let i = 0; i < results.length; i++) {
+            result = results[i]
+            const Photos = Parse.Object.extend("Photos")
+            const photoQuery = new Parse.Query(Photos)
+            photoQuery.equalTo("restaurantYelpId", result.yelpId)
+            photoQuery.find().then(photos => {
+                photos = JSON.stringify(photos)
+                photos = JSON.parse(photos)
+                result["images"] = photos
+                if (i === results.length - 1) {
+                    res.json({results})
+                }
+            })
+        } 
+    })
 })
 
 router.get('/restaurants/:id', (req, res) => {
