@@ -15,8 +15,8 @@ module.exports = {
     yelpRoutes: {
         businessUrl:  "https://api.yelp.com/v3/businesses/search",
         restaurantDetails: "https://api.yelp.com/v3/businesses/",
-        clientID: "3L8Y7mtIpK7UAyR0uorDHA",
-        apiKey: "9ZrSONpYvK3nAJwiX7nAG6iBI_WXk5s6vXoRXePg_U0w1bE77OtMyg81aDjxwUA7snF2Obwq7g4zQNL0r1Qdz2TEiCayadj9bDLDlZcmynb7kxWpUGHTkZUC8woxXXYx",
+        clientID: "Z1M9PVNRNrHm-KIFnA2eHw",
+        apiKey: "lyUcXUepfXrwaCC3nygsdSF5_5HfaAEVSA3NJwdMF5caoMJrJ4qngfAJLKovawiCcHxNjNQY9mBEFUuRVzCoueutimkoG9JEZIt1V0p9rcWcxpfAeKUd8IeUarQvXXYx",
     },
     MAX_RATING: 5,
     recommendationsSample: {
