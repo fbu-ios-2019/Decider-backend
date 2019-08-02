@@ -223,4 +223,51 @@ function fetchImages(restaurant, yelpId) {
 // Call function to update images for restaurants in the database
 // updateImages()
 
+// Function to add the name of the restaurant for each photo in the Photos table on the database
+async function updateNames() {
+    // Fetch restaurants
+    const Restaurants = Parse.Object.extend("Restaurants")
+    const restaurantQuery = new Parse.Query(Restaurants)
+    restaurantQuery.skip(100)
+    restaurantQuery.find().then(restaurants => {
+        // Iterate through all given restaurants
+        for(restaurant of restaurants) {
+            yelpId = restaurant.get("yelpId")
+            name = restaurant.get("name")
+            
+            fetchOneRestaurant(name, yelpId)
+
+            async function fetchOneRestaurant(name, yelpId) {
+                await fetchPhotos(name, yelpId)
+            }
+        }
+    })
+}
+
+
+// Function to fetch images from a specific restaurant and save it to the restaurant
+function fetchPhotos(name, yelpId) {
+    return new Promise (resolve => {
+        const Photos = Parse.Object.extend("Photos")
+        const photosQuery = new Parse.Query(Photos)
+        // Only query the photos that have the matching restaurant id
+        photosQuery.equalTo("restaurantYelpId", yelpId)
+        photosQuery.find().then(photos => {
+            // Save name in corresponding photo
+            for(photo of photos) {
+                photo.set("restaurantName", name)
+                photo.save().then(photo => {
+                    console.log("Save successful")
+                })
+            }
+            resolve()
+        })
+    })
+}
+
+
+// Call function to update names for restaurants in the database
+// updateNames()
+
+
 app.listen(port, () => console.log(`Server running on port ${port}!`))
