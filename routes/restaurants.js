@@ -6,7 +6,7 @@ Parse.initialize(parseConfig.appId, "", parseConfig.masterKey)
 Parse.serverURL = parseConfig.serverURL
 
 router.post('/restaurants/recommendations', (req, res) => {
-    const location = req.body.location ? req.body.location: "Sunnyvale"
+    const location = req.body.location ? req.body.location : "Sunnyvale"
     let likedPhotos = req.body.likedPhotos ? req.body.likedPhotos : likedSample
     let hatedPhotos = req.body.hatedPhotos ? req.body.hatedPhotos : hatedSample
 
@@ -41,7 +41,10 @@ router.post('/restaurants/recommendations', (req, res) => {
         results = JSON.parse(results)
         const mostReviews = results[0]["reviewCount"]
         
-        for (restaurant of results) {
+        fetchPhotosCompleted = false;
+
+        for (i = 0; i < results.length; i++) {
+            restaurant = results[i];
             ratingParams = {    
                 photosLikedCount: inputDict[restaurant.yelpId] ? inputDict[restaurant.yelpId]["liked"] : 0,
                 photosHatedCount: inputDict[restaurant.yelpId] ? inputDict[restaurant.yelpId]["hated"] : 0,
@@ -49,13 +52,15 @@ router.post('/restaurants/recommendations', (req, res) => {
                 restaurantDislikes: restaurant.unlikeCount,
                 rating: restaurant.rating,
                 reviewCount: restaurant.reviewCount
-
             }
             restaurantScore = weightedScore(ratingParams, mostReviews)
             restaurant["score"] = restaurantScore;
+            console.log(restaurant)
         }
-        results.sort((a, b) => {return b["score"] - a["score"]});
-        res.json({results:results.slice(0, 3)})
+
+        results.sort((a, b) => {return b["score"] - a["score"]})
+        results = results.slice(0, 3)
+        res.json({results})
     })
 }) 
 
@@ -74,8 +79,6 @@ router.post('/restaurants/save', (req, res) => {
         })
     })
     })
-    
-    
 })
 
 router.post('/restaurants/list', (req,res) => {
@@ -142,8 +145,6 @@ router.get('/restaurants/:id', (req, res) => {
         })
     }
     fetchRestaurant()
-  
-    
 })
 
 

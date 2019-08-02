@@ -77,6 +77,7 @@ app.get('/crawl/:category/:location', (req, res) => {
         }
     
     }
+    // Query for Yelp API
     request(options, (error, response, body) => {
         try {
             if (!error && response.statusCode == 200) {
@@ -157,7 +158,7 @@ function fetchData(id) {
         const restaurantOptions = {
             url: yelpRoutes.restaurantDetails + id,
             headers: {
-                'Authorization': 'Bearer '+ yelpRoutes.apiKey
+                'Authorization': 'Bearer ' + yelpRoutes.apiKey
             }
         }
 
@@ -172,5 +173,54 @@ function fetchData(id) {
         })
     })
 }
+
+// Function to add images for objects that already on the database
+async function updateImages() {
+    // Fetch restaurants
+    const Restaurants = Parse.Object.extend("Restaurants")
+    const restaurantQuery = new Parse.Query(Restaurants)
+    restaurantQuery.skip(100)
+    restaurantQuery.find().then(restaurants => {
+        // Iterate through all given restaurants
+        for(restaurant of restaurants) {
+            yelpId = restaurant.get("yelpId")
+            
+            fetchOneRestaurant(yelpId)
+
+            async function fetchOneRestaurant(yelpId) {
+                let images = await fetchImages(restaurant, yelpId)
+            }
+        }
+    })
+}
+
+// Function to fetch images from a specific restaurant and save it to the restaurant
+function fetchImages(restaurant, yelpId) {
+    return new Promise (resolve => {
+        const Photos = Parse.Object.extend("Photos")
+        const photosQuery = new Parse.Query(Photos)
+        // Only query the photos that have the matching restaurant id
+        photosQuery.equalTo("restaurantYelpId", yelpId)
+        photosQuery.find().then(photos => {
+            // Store images in array
+            let photosArray = []
+            for(photo of photos) {
+                photosArray.push(photo.get("imageUrl"))
+            }
+
+            // Update restaurant object and save it on database
+            restaurant.set("images", photosArray)
+                restaurant.save().then(restaurant => {
+                    console.log("Save successful")
+                })
+
+            resolve(photosArray)
+        })
+    })
+}
+
+
+// Call function to update images for restaurants in the database
+// updateImages()
 
 app.listen(port, () => console.log(`Server running on port ${port}!`))

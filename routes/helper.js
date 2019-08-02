@@ -22,14 +22,11 @@ router.get('/categories', (req, res) => {
             }
 
             res.json({
-                results: ["all", ... categorySet]
+                results: ["All", ... categorySet]
             })
         })
     }
-
     fetchCategories()
-  
-    
 })
 
 router.get('/cities', (req, res) => {
@@ -46,7 +43,6 @@ router.get('/cities', (req, res) => {
         res.json({
             results: [... citySet]
         })
-        
     })
 })
 
