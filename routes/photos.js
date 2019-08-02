@@ -20,7 +20,7 @@ router.get('/photos/:category/:location/:offset/', (req, res) => {
         query.matchesKeyInQuery("restaurantYelpId", "yelpId", restaurantQuery)
         query.skip(offset)
         query.limit(20) 
-        if (category !== 'all') {
+        if (category !== 'All') {
             query.equalTo("categories", category)
         }
         let dbPhotos = await query.find()
