@@ -12,50 +12,34 @@ router.get('/history/:userId', (req, res) => {
     const History = Parse.Object.extend("Recommendations")
     const historyQuery = new Parse.Query(History)
     historyQuery.equalTo("userId", userId)
-    historyQuery.limit(1)
     historyQuery.find().then(restaurants => {
-        let usersHistoryArray = []
-        async function fetchHistory() {
-           
-            for(restaurant of restaurants) {
-                function getData() { 
-                    return new Promise(resolve => {
+
+            async function fetchHistory() {
+                    let usersHistoryArray = []
+                    
+                    for(restaurant of restaurants) {
                         let historyDict = {}
                         const allIds = restaurant.get("restaurants")
                         const date = restaurant.createdAt
-
+        
                         historyDict["date"] = date
-
-                        async function fetchOne(allIds) {
-                            const result =  await fetchRestaurantsOfOneDate(allIds)
-                            historyDict["restaurants"] = result
-                            usersHistoryArray.push(historyDict)
-                            console.log(result)
-                        }
-
-                        fetchOne(allIds)
-                        // .log(historyDict)
-                        resolve()
-                    })
-                    
-                }
-                
-                await getData()
-                console.log(usersHistoryArray.length)
-                
+                        usersHistoryArray = await fetchRestaurantsOfOneDate(allIds, usersHistoryArray, historyDict)
+                    }
+                return usersHistoryArray
             }
+            
+        async function saveHistory() {
+            const finalArray = await fetchHistory()
+            res.json({
+                userHistory: finalArray
+            })
         }
 
-        fetchHistory()
-        console.log("Complete user history")
-        // console.log(usersHistoryArray)
-        res.json({
-            userHistory: usersHistoryArray
-        })
+        saveHistory()
     })
 }) 
 
-function fetchRestaurantsOfOneDate(ids) {
+function fetchRestaurantsOfOneDate(ids, usersHistoryArray, historyDict) {
     return new Promise(resolve => {
         const RestaurantModel = Parse.Object.extend("Restaurants")
         const restaurantQuery = new Parse.Query(RestaurantModel)
@@ -63,7 +47,9 @@ function fetchRestaurantsOfOneDate(ids) {
         restaurantQuery.find().then(results => {
             results = JSON.stringify(results)
             results = JSON.parse(results)
-            resolve(results)
+            historyDict["restaurants"] = results
+            usersHistoryArray.push(historyDict)
+            resolve(usersHistoryArray)
         })
     })
     

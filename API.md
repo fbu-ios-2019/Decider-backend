@@ -456,5 +456,35 @@ on failure:
 
 ```
 
+## GET /history/:id
+
+- takes in a param of user id
+- returns a dictionary of a user's recommended restaurants history
+
+```
+{
+    "historyArray" : {
+        date: "2019-08-02T19:05:41.163Z",
+        restaurants: [
+            {
+                name: ....,
+                yelpId: ...., 
+                ......
+            },
+            {
+                name: ....,
+                yelpId: ...., 
+                ......                
+            },
+            {
+                name: ....,
+                yelpId: ...., 
+                ......                
+            }
+        ]
+    }
+}
+```
+
 
 
