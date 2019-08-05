@@ -10,6 +10,7 @@ const helperRouter = require('./routes/helper')
 const restaurantsRouter = require('./routes/restaurants')
 const authRouter = require('./routes/user')
 const historyRouter = require('./routes/history')
+const ratingRouter = require('./routes/ratings')
 const {parseConfig, corsConfig, yelpRoutes} = require('./config')
 
 Parse.initialize(parseConfig.appId, "", parseConfig.masterKey)
@@ -27,6 +28,7 @@ app.use(helperRouter)
 app.use(restaurantsRouter)
 app.use(authRouter)
 app.use(historyRouter)
+app.use(ratingRouter)
 
 app.get('/', (req, res) => {
     
