@@ -55,13 +55,41 @@ router.post('/restaurants/recommendations', (req, res) => {
             }
             restaurantScore = weightedScore(ratingParams, mostReviews)
             restaurant["score"] = restaurantScore;
-            console.log(restaurant)
+            // console.log(restaurant)
         }
 
         results.sort((a, b) => {return b["score"] - a["score"]})
         results = results.slice(0, 3)
+
+        // Save ids in the recommendations table
+
+        // Receive user's ID
+        const userId = req.body.userId
+
+        // Fetch restaurants
+        const Recommendations = Parse.Object.extend("Recommendations")
+        const recommendations = new Recommendations
+
+        recommendations.set("userId", userId)
+        for(result of results) {
+            recommendations.add("restaurants", result.yelpId)
+            console.log(result.yelpId)
+        }
+
+        recommendations.save().then(recommendationsSaved => {
+            console.log("Recommendations successfully saved")
+        })
+
+
+                // const recommendationsQuery = new Parse.Query(Recommendations)
+                // recommendationsQuery.find().then(recommendations => {
+                //     // ADD THINGS HERE
+                //     recommendations.add()
+                // })
+
+
         res.json({results})
-    })
+    }) 
 }) 
 
 router.post('/restaurants/save', (req, res) => {
@@ -150,9 +178,9 @@ router.get('/restaurants/:id', (req, res) => {
 
 function weightedScore(data, mostReviews) {
     const {photosLikedCount, photosHatedCount, restaurantLikes, restaurantDislikes, rating, reviewCount} = data
-    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0: (photosLikedCount/(photosLikedCount + photosHatedCount))*40
-    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0:(restaurantLikes/(restaurantLikes + restaurantDislikes))*20
-    const yelpRatingScore = (rating/MAX_RATING)*25
+    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * 40
+    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * 20
+    const yelpRatingScore = (rating/MAX_RATING) * 25
     const reviewCountScore = (reviewCount/ mostReviews) * 15
 
     const restaurantScore = userSwipeScore + internalRatingScore + yelpRatingScore + reviewCountScore
