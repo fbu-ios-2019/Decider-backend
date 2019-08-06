@@ -53,15 +53,23 @@ router.post('/restaurants/recommendations', (req, res) => {
                 rating: restaurant.rating,
                 reviewCount: restaurant.reviewCount
             }
-            restaurantScore = weightedScore(ratingParams, mostReviews)
+
+            let pricePreference = calculatePriceScore(req.body.pricePreference, restaurant.priceRating)
+            restaurantScore = weightedScore(ratingParams, mostReviews, pricePreference, req.body.userPreference)
             restaurant["score"] = restaurantScore;
-            // console.log(restaurant)
+            
         }
 
         results.sort((a, b) => {return b["score"] - a["score"]})
         results = results.slice(0, 3)
 
-        // Save ids in the recommendations table
+        for(result of results) {
+            console.log("THREE FINAL SCORES")
+            console.log(result["score"])
+        }
+
+
+            // Save ids in the recommendations table
 
         // Receive user's ID
         const userId = req.body.userId
@@ -73,20 +81,11 @@ router.post('/restaurants/recommendations', (req, res) => {
         recommendations.set("userId", userId)
         for(result of results) {
             recommendations.add("restaurants", result.yelpId)
-            console.log(result.yelpId)
         }
 
         recommendations.save().then(recommendationsSaved => {
             console.log("Recommendations successfully saved")
         })
-
-
-                // const recommendationsQuery = new Parse.Query(Recommendations)
-                // recommendationsQuery.find().then(recommendations => {
-                //     // ADD THINGS HERE
-                //     recommendations.add()
-                // })
-
 
         res.json({results})
     }) 
@@ -176,15 +175,38 @@ router.get('/restaurants/:id', (req, res) => {
 })
 
 
-function weightedScore(data, mostReviews) {
-    const {photosLikedCount, photosHatedCount, restaurantLikes, restaurantDislikes, rating, reviewCount} = data
-    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * 40
-    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * 20
-    const yelpRatingScore = (rating/MAX_RATING) * 25
-    const reviewCountScore = (reviewCount/ mostReviews) * 15
+function calculatePriceScore(userPricePreference, restaurantPriceRating) {
+    let priceWeight = 0
 
-    const restaurantScore = userSwipeScore + internalRatingScore + yelpRatingScore + reviewCountScore
+    if(restaurantPriceRating <= userPricePreference) {
+        priceWeight = 1
+        return priceWeight
+    } 
+
+    priceWeight = 1 - (restaurantPriceRating - userPricePreference) * 0.25
+    return priceWeight
+
+}
+
+
+function weightedScore(data, mostReviews, pricePreference, userPreference) {
+
+    const preferencesArray = userPreference.split(',')
+
+    const weightArray = [40, 25, 15, 10, 10]
+
+    const {photosLikedCount, photosHatedCount, restaurantLikes, restaurantDislikes, rating, reviewCount} = data
+
+    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * weightArray[preferencesArray.indexOf("Image swipes")]
+    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * weightArray[preferencesArray.indexOf("Decider's rating")]
+    const yelpRatingScore = (rating/MAX_RATING) * weightArray[preferencesArray.indexOf("Restaurant's rating")]
+    const reviewCountScore = (reviewCount/ mostReviews) * weightArray[preferencesArray.indexOf("Restaurant's review count")]
+    const pricePreferenceScore = pricePreference * weightArray[preferencesArray.indexOf("Restaurant's price")]
     
+    const restaurantScore = userSwipeScore + internalRatingScore + yelpRatingScore + reviewCountScore + pricePreferenceScore
+
+    console.log("----------->>> SCORE - ", restaurantScore)
+
     return restaurantScore
 }
 
