@@ -111,11 +111,11 @@ router.post('/restaurants/save', (req, res) => {
 
 router.post('/restaurants/list', (req,res) => {
     let {ids} = req.body || {}
-    ids = JSON.parse(ids)
+    idArray = ids.split(",")
     
     const Restaurants = Parse.Object.extend("Restaurants")
     const query = new Parse.Query(Restaurants)
-    query.containedIn("yelpId", ids)
+    query.containedIn("yelpId", idArray)
     query.find().then(results => {
         results = JSON.stringify(results)
         results = JSON.parse(results)
