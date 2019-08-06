@@ -486,5 +486,45 @@ on failure:
 }
 ```
 
+## POST /rating/like/:id
+- takes in a restaurant yelp id and returns the following:
+
+```
+{
+    success: "restaurant liked"
+}
+
+```
+
+## POST /rating/unlike/:id
+- takes in a restaurant yelp id and returns the following:
+
+```
+{
+    success: "restaurant unliked"
+}
+
+```
+
+## POST /rating/hate/:id
+- takes in a restaurant yelp id and returns the following:
+
+```
+{
+    success: "restaurant hated"
+}
+
+```
+
+## POST /rating/unhate/:id
+- takes in a restaurant yelp id and returns the following:
+
+```
+{
+    success: "restaurant unhated"
+}
+
+```
+
 
 
