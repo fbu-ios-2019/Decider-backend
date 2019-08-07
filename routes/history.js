@@ -14,17 +14,17 @@ router.get('/history/:userId', (req, res) => {
     historyQuery.equalTo("userId", userId)
     historyQuery.find().then(restaurants => {
 
+        console.log(restaurants)
             async function fetchHistory() {
-                    let usersHistoryArray = []
-                    
-                    for(restaurant of restaurants) {
-                        let historyDict = {}
-                        const allIds = restaurant.get("restaurants")
-                        const date = restaurant.createdAt
-        
-                        historyDict["date"] = date
-                        usersHistoryArray = await fetchRestaurantsOfOneDate(allIds, usersHistoryArray, historyDict)
-                    }
+                let usersHistoryArray = []
+                let restaurantsIdsArray = []
+
+                for(restaurant of restaurants) {
+                    restaurantsIdsArray.push(restaurant.get("restaurantYelpId"))
+                }
+                
+                usersHistoryArray = await fetchRestaurants(usersHistoryArray, restaurantsIdsArray)
+
                 return usersHistoryArray
             }
             
@@ -38,6 +38,25 @@ router.get('/history/:userId', (req, res) => {
         saveHistory()
     })
 }) 
+
+
+function fetchRestaurants(usersHistoryArray, restaurants) {
+    return new Promise(resolve => {
+
+        const RestaurantModel = Parse.Object.extend("Restaurants")
+        const restaurantQuery = new Parse.Query(RestaurantModel)
+        restaurantQuery.containedIn("yelpId", restaurants)
+        restaurantQuery.find().then(results => { 
+            console.log(restaurants)
+            results = JSON.stringify(results)
+            results = JSON.parse(results)
+            usersHistoryArray.push(results)
+            
+            resolve(usersHistoryArray)
+        })
+
+    })
+}
 
 function fetchRestaurantsOfOneDate(ids, usersHistoryArray, historyDict) {
     return new Promise(resolve => {
