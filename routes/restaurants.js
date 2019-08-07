@@ -68,28 +68,53 @@ router.post('/restaurants/recommendations', (req, res) => {
             console.log(result["score"])
         }
 
-
-            // Save ids in the recommendations table
-
         // Receive user's ID
         const userId = req.body.userId
 
-        // Fetch restaurants
-        const Recommendations = Parse.Object.extend("Recommendations")
-        const recommendations = new Recommendations
-
-        recommendations.set("userId", userId)
-        for(result of results) {
-            recommendations.add("restaurants", result.yelpId)
-        }
-
-        recommendations.save().then(recommendationsSaved => {
-            console.log("Recommendations successfully saved")
-        })
-
+        // Save recommendations
+        saveRecommendationsToDatabase(results, userId)
+    
         res.json({results})
     }) 
 }) 
+
+
+
+function saveRecommendationsToDatabase(results, userId) {
+    const Recommendations = Parse.Object.extend("Recommendations")
+    const recommendationsQuery = new Parse.Query(Recommendations)
+
+    for(i = 0; i < results.length; i++) {
+        const result = results[i]
+        recommendationsQuery.equalTo("userId", userId)
+        recommendationsQuery.equalTo("restaurantYelpId", result["yelpId"])
+        recommendationsQuery.find().then(existingRecommendations => {
+            if(existingRecommendations.length === 0) {
+                const Recommendations = Parse.Object.extend("Recommendations")
+                const recommendations = new Recommendations
+                saveRecommendations(recommendations, userId, result)
+            } else {
+                console.log("ID repeated ---> ", result["yelpId"])
+            }
+
+        })
+    }
+}
+
+async function saveRecommendations(recommendations, userId, result) {
+    recommendations.set("userId", userId)
+    recommendations.set("restaurantYelpId", result["yelpId"])
+    await saveThenRecommendations(recommendations)
+}
+
+function saveThenRecommendations(recommendations) {
+    return new Promise(resolve => {
+        recommendations.save().then(recommendationsSaved => {
+            console.log("Save successful")
+            resolve()
+        })
+    })
+}
 
 router.post('/restaurants/save', (req, res) => {
     const {yelpId} = req.body || ""
@@ -205,6 +230,11 @@ function weightedScore(data, mostReviews, pricePreference, userPreference) {
     
     const restaurantScore = userSwipeScore + internalRatingScore + yelpRatingScore + reviewCountScore + pricePreferenceScore
 
+    console.log("userSwipe ---> ", userSwipeScore)
+    console.log("internalRating ---> ", internalRatingScore)
+    console.log("yelpRating ---> ", yelpRatingScore)
+    console.log("reviewCount ---> ", reviewCountScore)
+    console.log("pricePreference ---> ", pricePreferenceScore)
     console.log("----------->>> SCORE - ", restaurantScore)
 
     return restaurantScore
