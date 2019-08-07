@@ -188,6 +188,31 @@ async function updateImages() {
         // Iterate through all given restaurants
         for(restaurant of restaurants) {
             yelpId = restaurant.get("yelpId")
+
+            console.log("Yelp ID --->> ", yelpId)
+            
+            fetchOneRestaurant(restaurant, yelpId)
+
+            async function fetchOneRestaurant(yelpId) {
+                let images = await fetchImages(restaurant, yelpId)
+            }
+        }
+    })
+}
+
+
+
+
+// Function to add images for objects that already on the database
+async function updateImages() {
+    // Fetch restaurants
+    const Restaurants = Parse.Object.extend("Restaurants")
+    const restaurantQuery = new Parse.Query(Restaurants)
+    restaurantQuery.skip(300)
+    restaurantQuery.find().then(restaurants => {
+        // Iterate through all given restaurants
+        for(restaurant of restaurants) {
+            yelpId = restaurant.get("yelpId")
             
             fetchOneRestaurant(yelpId)
 
@@ -232,7 +257,7 @@ async function updateNames() {
     // Fetch restaurants
     const Restaurants = Parse.Object.extend("Restaurants")
     const restaurantQuery = new Parse.Query(Restaurants)
-    restaurantQuery.skip(100)
+    restaurantQuery.skip(300)
     restaurantQuery.find().then(restaurants => {
         // Iterate through all given restaurants
         for(restaurant of restaurants) {
