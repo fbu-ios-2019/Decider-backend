@@ -54,7 +54,6 @@ router.post('/restaurants/recommendations', (req, res) => {
                 rating: restaurant.rating,
                 reviewCount: restaurant.reviewCount
             }
-
             let pricePreference = calculatePriceScore(req.body.pricePreference, restaurant.priceRating)
             restaurantScore = weightedScore(ratingParams, mostReviews, pricePreference, req.body.userPreference)
             restaurant["score"] = restaurantScore;
