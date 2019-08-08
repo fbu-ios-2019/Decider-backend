@@ -54,6 +54,7 @@ router.post('/restaurants/recommendations', (req, res) => {
                 reviewCount: restaurant.reviewCount
             }
 
+            console.log("NAME", restaurant["name"])
             let pricePreference = calculatePriceScore(req.body.pricePreference, restaurant.priceRating)
             restaurantScore = weightedScore(ratingParams, mostReviews, pricePreference, req.body.userPreference)
             restaurant["score"] = restaurantScore;
@@ -221,6 +222,8 @@ function weightedScore(data, mostReviews, pricePreference, userPreference) {
     const weightArray = [40, 25, 15, 10, 10]
 
     const {photosLikedCount, photosHatedCount, restaurantLikes, restaurantDislikes, rating, reviewCount} = data
+
+    console.log(data)
 
     const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * weightArray[preferencesArray.indexOf("Image swipes")]
     const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * weightArray[preferencesArray.indexOf("Decider's rating")]
