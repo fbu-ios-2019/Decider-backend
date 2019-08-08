@@ -6,30 +6,33 @@ Parse.initialize(parseConfig.appId, "", parseConfig.masterKey)
 Parse.serverURL = parseConfig.serverURL
 
 router.post('/restaurants/recommendations', (req, res) => {
-    const location = req.body.location ? req.body.location : "Sunnyvale"
-    let likedPhotos = req.body.likedPhotos ? req.body.likedPhotos : likedSample
-    let hatedPhotos = req.body.hatedPhotos ? req.body.hatedPhotos : hatedSample
+    const location = req.body.location
+    let likedPhotos = req.body.likedPhotos
+    let hatedPhotos = req.body.hatedPhotos
+
+    likedPhotos = likedPhotos.length ? likedPhotos.split(","): ""
+    hatedPhotos = hatedPhotos.length ? hatedPhotos.split(","): ""
 
     let inputDict = {}
     
-    for (photo of likedPhotos) {
-        if (!(photo.restaurantYelpId in inputDict)) {
-            inputDict[photo.restaurantYelpId] = {
+    for (id of likedPhotos) {
+        if (!(id in inputDict)) {
+            inputDict[id] = {
                 liked: 0,
                 hated: 0
             }
             
         }
-        inputDict[photo.restaurantYelpId]["liked"] = (inputDict[photo.restaurantYelpId]["liked"] || 0) + 1
+        inputDict[id]["liked"] = (inputDict[id]["liked"] || 0) + 1
     }
-    for (photo of hatedPhotos) {
-        if (!(photo.restaurantYelpId in inputDict)) {
-            inputDict[photo.restaurantYelpId] = {
+    for (id of hatedPhotos) {
+        if (!(id in inputDict)) {
+            inputDict[id] = {
                 liked: 0,
                 hated: 0
             }
         }
-        inputDict[photo.restaurantYelpId]["hated"] = (inputDict[photo.restaurantYelpId]["hated"] || 0) + 1
+        inputDict[id]["hated"] = (inputDict[id]["hated"] || 0) + 1
     }
 
     const Restaurants = Parse.Object.extend("Restaurants")
@@ -41,8 +44,6 @@ router.post('/restaurants/recommendations', (req, res) => {
         results = JSON.parse(results)
         const mostReviews = results[0]["reviewCount"]
         
-        fetchPhotosCompleted = false;
-
         for (i = 0; i < results.length; i++) {
             restaurant = results[i];
             ratingParams = {    
@@ -62,11 +63,6 @@ router.post('/restaurants/recommendations', (req, res) => {
 
         results.sort((a, b) => {return b["score"] - a["score"]})
         results = results.slice(0, 3)
-
-        for(result of results) {
-            console.log("THREE FINAL SCORES")
-            console.log(result["score"])
-        }
 
         // Receive user's ID
         const userId = req.body.userId
@@ -93,8 +89,6 @@ function saveRecommendationsToDatabase(results, userId) {
                 const Recommendations = Parse.Object.extend("Recommendations")
                 const recommendations = new Recommendations
                 saveRecommendations(recommendations, userId, result)
-            } else {
-                console.log("ID repeated ---> ", result["yelpId"])
             }
 
         })
@@ -110,7 +104,6 @@ async function saveRecommendations(recommendations, userId, result) {
 function saveThenRecommendations(recommendations) {
     return new Promise(resolve => {
         recommendations.save().then(recommendationsSaved => {
-            console.log("Save successful")
             resolve()
         })
     })
@@ -219,24 +212,15 @@ function weightedScore(data, mostReviews, pricePreference, userPreference) {
     const preferencesArray = userPreference.split(',')
 
     const weightArray = [40, 25, 15, 10, 10]
-
     const {photosLikedCount, photosHatedCount, restaurantLikes, restaurantDislikes, rating, reviewCount} = data
 
-    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * weightArray[preferencesArray.indexOf("Image swipes")]
-    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * weightArray[preferencesArray.indexOf("Decider's rating")]
-    const yelpRatingScore = (rating/MAX_RATING) * weightArray[preferencesArray.indexOf("Restaurant's rating")]
-    const reviewCountScore = (reviewCount/ mostReviews) * weightArray[preferencesArray.indexOf("Restaurant's review count")]
-    const pricePreferenceScore = pricePreference * weightArray[preferencesArray.indexOf("Restaurant's price")]
+    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * weightArray[preferencesArray.indexOf("review count")]
+    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * weightArray[preferencesArray.indexOf("others likes/dislikes")]
+    const yelpRatingScore = (rating/MAX_RATING) * weightArray[preferencesArray.indexOf("rating")]
+    const reviewCountScore = (reviewCount/ mostReviews) * weightArray[preferencesArray.indexOf("review count")]
+    const pricePreferenceScore = pricePreference * weightArray[preferencesArray.indexOf("price")]
     
     const restaurantScore = userSwipeScore + internalRatingScore + yelpRatingScore + reviewCountScore + pricePreferenceScore
-
-    console.log("userSwipe ---> ", userSwipeScore)
-    console.log("internalRating ---> ", internalRatingScore)
-    console.log("yelpRating ---> ", yelpRatingScore)
-    console.log("reviewCount ---> ", reviewCountScore)
-    console.log("pricePreference ---> ", pricePreferenceScore)
-    console.log("----------->>> SCORE - ", restaurantScore)
-
     return restaurantScore
 }
 
