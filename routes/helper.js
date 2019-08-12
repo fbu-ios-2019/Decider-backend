@@ -46,4 +46,47 @@ router.get('/cities', (req, res) => {
     })
 })
 
+
+router.get('/data/like',(req, res) => {
+    const Restaurants = Parse.Object.extend('Restaurants')
+    const restaurantQuery = new Parse.Query(Restaurants)
+    restaurantQuery.ascending('unlikeCount')
+    restaurantQuery.find().then(results => {
+        for (result of results) {
+            const likeCount = Math.round(Math.random() * 7) + 1
+            const unlikeCount =  Math.round(Math.random() * 7) + 1
+            const id = result.get('yelpId')
+            
+            async function incrementForOne (id, likeCount, unlikeCount) {
+                await saveForOne(id, likeCount, unlikeCount )
+            }
+
+            incrementForOne(id, likeCount, unlikeCount)
+
+        }
+        res.json({
+            results
+        })
+    })
+})
+
+
+function saveForOne (id, likeCount, unlikeCount) {
+    return new Promise(resolve => {
+        const Restaurants = Parse.Object.extend('Restaurants')
+        const query = new Parse.Query(Restaurants)
+        query.equalTo("yelpId", id)
+        query.first().then(place => {
+            place.set("likeCount", likeCount)
+            place.set("unlikeCount", unlikeCount)
+            place.save().then(() => {
+                resolve()
+            })
+            
+    
+        }) 
+    })
+    
+}
+
 module.exports = router
