@@ -213,11 +213,11 @@ function weightedScore(data, mostReviews, pricePreference, userPreference) {
     const weightArray = [40, 25, 15, 10, 10]
     const {photosLikedCount, photosHatedCount, restaurantLikes, restaurantDislikes, rating, reviewCount} = data
 
-    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * weightArray[preferencesArray.indexOf("review count")]
-    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * weightArray[preferencesArray.indexOf("others likes/dislikes")]
-    const yelpRatingScore = (rating/MAX_RATING) * weightArray[preferencesArray.indexOf("rating")]
-    const reviewCountScore = (reviewCount/ mostReviews) * weightArray[preferencesArray.indexOf("review count")]
-    const pricePreferenceScore = pricePreference * weightArray[preferencesArray.indexOf("price")]
+    const userSwipeScore = (photosLikedCount + photosHatedCount) == 0 ? 0 : (photosLikedCount/(photosLikedCount + photosHatedCount)) * weightArray[preferencesArray.indexOf("Image swipes")]
+    const internalRatingScore = (restaurantLikes + restaurantDislikes) == 0 ? 0: (restaurantLikes/(restaurantLikes + restaurantDislikes)) * weightArray[preferencesArray.indexOf("Munch rating")]
+    const yelpRatingScore = (rating/MAX_RATING) * weightArray[preferencesArray.indexOf("Restaurant's rating")]
+    const reviewCountScore = (reviewCount/ mostReviews) * weightArray[preferencesArray.indexOf("Restaurant's review count")]
+    const pricePreferenceScore = pricePreference * weightArray[preferencesArray.indexOf("Restaurant's price")]
     
     const restaurantScore = userSwipeScore + internalRatingScore + yelpRatingScore + reviewCountScore + pricePreferenceScore
     return restaurantScore
