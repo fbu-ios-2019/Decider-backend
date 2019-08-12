@@ -50,11 +50,19 @@ router.get('/cities', (req, res) => {
 router.get('/data/like',(req, res) => {
     const Restaurants = Parse.Object.extend('Restaurants')
     const restaurantQuery = new Parse.Query(Restaurants)
+<<<<<<< HEAD
     restaurantQuery.descending('unlikeCount')
     restaurantQuery.find().then(results => {
         for (result of results) {
             const likeCount = Math.round(Math.random() * 3) + 5
             const unlikeCount =  5 - Math.round(Math.random() * 3)
+=======
+    restaurantQuery.ascending('unlikeCount')
+    restaurantQuery.find().then(results => {
+        for (result of results) {
+            const likeCount = Math.round(Math.random() * 7) + 1
+            const unlikeCount =  Math.round(Math.random() * 7) + 1
+>>>>>>> a5e8e2a23cdbaf7144a12d83f3f13647be384628
             const id = result.get('yelpId')
             
             async function incrementForOne (id, likeCount, unlikeCount) {
